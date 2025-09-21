@@ -1,0 +1,851 @@
+openapi: 3.0.0
+paths:
+  /proxy:
+    post:
+      operationId: ProxyController_create
+      parameters: []
+      requestBody:
+        required: true
+        description: Customer to create
+        content:
+          application/json:
+            schema:
+              type: string
+            examples:
+              sample:
+                summary: Valid payload
+                value:
+                  name: Alice
+                  lastName: Doe
+                  middleName: Marie
+                  email: alice@example.com
+                  birthDate: 2010-10-10
+                  isActive: true
+                  password: S3cureP@ss!
+      responses:
+        "201":
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponseDto"
+              examples:
+                created:
+                  summary: Created customer
+                  value:
+                    id: a3f6b4fe-1234-4a1b-9f00-abc123def456
+                    name: Alice
+                    lastName: Doe
+                    middleName: Marie
+                    email: alice@example.com
+                    birthDate: 2010-10-10
+                    isActive: true
+                    createdAt: 2025-09-20T10:00:00.000Z
+                    updatedAt: 2025-09-20T10:00:00.000Z
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                validation:
+                  summary: Validation failed
+                  value:
+                    statusCode: 400
+                    error: Bad Request
+                    message:
+                      - email must be an email
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unauthorized:
+                  summary: Missing/invalid auth
+                  value:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Unauthorized
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                forbidden:
+                  summary: No permission
+                  value:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Forbidden resource
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                notFound:
+                  summary: Resource not found
+                  value:
+                    statusCode: 404
+                    error: Not Found
+                    message: Customer not found
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy/123
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                conflict:
+                  summary: Duplicate email
+                  value:
+                    statusCode: 409
+                    error: Conflict
+                    message: Email already in use
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unprocessable:
+                  summary: Business rule violation
+                  value:
+                    statusCode: 422
+                    error: Unprocessable Entity
+                    message: Rule violated
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                internal:
+                  summary: Unexpected server error
+                  value:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Something went wrong
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "502":
+          description: Upstream/Proxy Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                upstream:
+                  summary: External service failed
+                  value:
+                    statusCode: 502
+                    error: Bad Gateway
+                    message: Upstream error
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+      summary: Proxy → Create Customer
+      tags: &a1
+        - proxy
+    get:
+      operationId: ProxyController_findAll
+      parameters: []
+      responses:
+        "200":
+          description: Customers list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerResponseDto"
+              examples:
+                ok:
+                  summary: Two customers
+                  value:
+                    - id: uuid-1
+                      name: Alice
+                      lastName: Doe
+                      middleName: Marie
+                      email: alice@example.com
+                      birthDate: 2010-10-10
+                      isActive: true
+                    - id: uuid-2
+                      name: Bob
+                      lastName: Smith
+                      middleName: J
+                      email: bob@example.com
+                      birthDate: 2008-08-08
+                      isActive: false
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                validation:
+                  summary: Validation failed
+                  value:
+                    statusCode: 400
+                    error: Bad Request
+                    message:
+                      - email must be an email
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unauthorized:
+                  summary: Missing/invalid auth
+                  value:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Unauthorized
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                forbidden:
+                  summary: No permission
+                  value:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Forbidden resource
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                notFound:
+                  summary: Resource not found
+                  value:
+                    statusCode: 404
+                    error: Not Found
+                    message: Customer not found
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy/123
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                conflict:
+                  summary: Duplicate email
+                  value:
+                    statusCode: 409
+                    error: Conflict
+                    message: Email already in use
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unprocessable:
+                  summary: Business rule violation
+                  value:
+                    statusCode: 422
+                    error: Unprocessable Entity
+                    message: Rule violated
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                internal:
+                  summary: Unexpected server error
+                  value:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Something went wrong
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "502":
+          description: Upstream/Proxy Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                upstream:
+                  summary: External service failed
+                  value:
+                    statusCode: 502
+                    error: Bad Gateway
+                    message: Upstream error
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+      summary: Proxy → Find All Customers
+      tags: *a1
+  /proxy/{id}:
+    get:
+      operationId: ProxyController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            example: a3f6b4fe-1234-4a1b-9f00-abc123def456
+            type: string
+      responses:
+        "200":
+          description: Customer found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponseDto"
+              examples:
+                ok:
+                  summary: Single customer
+                  value:
+                    id: uuid-1
+                    name: Alice
+                    lastName: Doe
+                    middleName: Marie
+                    email: alice@example.com
+                    birthDate: 2010-10-10
+                    isActive: true
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                validation:
+                  summary: Validation failed
+                  value:
+                    statusCode: 400
+                    error: Bad Request
+                    message:
+                      - email must be an email
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unauthorized:
+                  summary: Missing/invalid auth
+                  value:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Unauthorized
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                forbidden:
+                  summary: No permission
+                  value:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Forbidden resource
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                notFound:
+                  summary: Resource not found
+                  value:
+                    statusCode: 404
+                    error: Not Found
+                    message: Customer not found
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy/123
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                conflict:
+                  summary: Duplicate email
+                  value:
+                    statusCode: 409
+                    error: Conflict
+                    message: Email already in use
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unprocessable:
+                  summary: Business rule violation
+                  value:
+                    statusCode: 422
+                    error: Unprocessable Entity
+                    message: Rule violated
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                internal:
+                  summary: Unexpected server error
+                  value:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Something went wrong
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "502":
+          description: Upstream/Proxy Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                upstream:
+                  summary: External service failed
+                  value:
+                    statusCode: 502
+                    error: Bad Gateway
+                    message: Upstream error
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+      summary: Proxy → Find Customer by Id
+      tags: *a1
+    patch:
+      operationId: ProxyController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            example: a3f6b4fe-1234-4a1b-9f00-abc123def456
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCustomerDto"
+      responses:
+        "200":
+          description: Customer updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponseDto"
+              examples:
+                ok:
+                  summary: Single customer
+                  value:
+                    id: uuid-1
+                    name: Alice
+                    lastName: Doe
+                    middleName: Marie
+                    email: alice@example.com
+                    birthDate: 2010-10-10
+                    isActive: true
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                validation:
+                  summary: Validation failed
+                  value:
+                    statusCode: 400
+                    error: Bad Request
+                    message:
+                      - email must be an email
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unauthorized:
+                  summary: Missing/invalid auth
+                  value:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Unauthorized
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                forbidden:
+                  summary: No permission
+                  value:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Forbidden resource
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                notFound:
+                  summary: Resource not found
+                  value:
+                    statusCode: 404
+                    error: Not Found
+                    message: Customer not found
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy/123
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                conflict:
+                  summary: Duplicate email
+                  value:
+                    statusCode: 409
+                    error: Conflict
+                    message: Email already in use
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unprocessable:
+                  summary: Business rule violation
+                  value:
+                    statusCode: 422
+                    error: Unprocessable Entity
+                    message: Rule violated
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                internal:
+                  summary: Unexpected server error
+                  value:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Something went wrong
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "502":
+          description: Upstream/Proxy Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                upstream:
+                  summary: External service failed
+                  value:
+                    statusCode: 502
+                    error: Bad Gateway
+                    message: Upstream error
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+      summary: Proxy → Update Customer by Id
+      tags: *a1
+    delete:
+      operationId: ProxyController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            example: a3f6b4fe-1234-4a1b-9f00-abc123def456
+            type: string
+      responses:
+        "200":
+          description: Customer deleted
+          content:
+            application/json:
+              examples:
+                ok:
+                  summary: Delete result
+                  value:
+                    deleted: true
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                validation:
+                  summary: Validation failed
+                  value:
+                    statusCode: 400
+                    error: Bad Request
+                    message:
+                      - email must be an email
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unauthorized:
+                  summary: Missing/invalid auth
+                  value:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Unauthorized
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                forbidden:
+                  summary: No permission
+                  value:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Forbidden resource
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                notFound:
+                  summary: Resource not found
+                  value:
+                    statusCode: 404
+                    error: Not Found
+                    message: Customer not found
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy/123
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                conflict:
+                  summary: Duplicate email
+                  value:
+                    statusCode: 409
+                    error: Conflict
+                    message: Email already in use
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                unprocessable:
+                  summary: Business rule violation
+                  value:
+                    statusCode: 422
+                    error: Unprocessable Entity
+                    message: Rule violated
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                internal:
+                  summary: Unexpected server error
+                  value:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Something went wrong
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+        "502":
+          description: Upstream/Proxy Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                upstream:
+                  summary: External service failed
+                  value:
+                    statusCode: 502
+                    error: Bad Gateway
+                    message: Upstream error
+                    timestamp: 2025-09-20T12:34:56.000Z
+                    path: /proxy
+      summary: Proxy → Delete Customer by Id
+      tags: *a1
+info:
+  title: Microservice API
+  description: External Customers proxy
+  version: 1.0.0
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    CustomerResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a3f6b4fe-1234-4a1b-9f00-abc123def456
+          format: uuid
+        name:
+          type: string
+          example: Alice
+        lastName:
+          type: string
+          example: Doe
+        middleName:
+          type: string
+          example: Marie
+        email:
+          type: string
+          example: alice@example.com
+        birthDate:
+          type: string
+          example: 2010-10-10
+          format: date
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          example: 2025-09-20T10:00:00.000Z
+        updatedAt:
+          type: string
+          example: 2025-09-20T11:00:00.000Z
+      required:
+        - id
+        - name
+        - lastName
+        - middleName
+        - email
+        - birthDate
+        - isActive
+    ErrorResponseDto:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: object
+          example: Invalid payload
+        timestamp:
+          type: string
+          example: 2025-09-20T12:34:56.000Z
+        path:
+          type: string
+          example: /proxy
+      required:
+        - statusCode
+        - error
+        - message
+        - timestamp
+        - path
+    UpdateCustomerDto:
+      type: object
+      properties: {}
